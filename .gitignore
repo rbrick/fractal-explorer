@@ -1,0 +1,6 @@
+fractal-explorer
+*.out
+*.o
+*.s
+*.png
+*.mp4
