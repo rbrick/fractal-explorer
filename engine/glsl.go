@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -54,13 +55,15 @@ func Include(p *Preprocessor, directive string, tokens []string) string {
 			groups := pattern.FindAllStringSubmatch(include, -1)
 			includePath := groups[0][1]
 
-			fi, err := os.Stat(includePath)
+			path := filepath.Join("shaders", includePath)
+
+			_, err := os.Stat(path)
 
 			if os.IsNotExist(err) {
 				return ""
 			}
 
-			f, err := os.Open(fi.Name())
+			f, err := os.Open(path)
 
 			if err != nil {
 				return ""
