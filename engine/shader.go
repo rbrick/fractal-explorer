@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/go-gl/gl/v3.2-core/gl"
+	"github.com/go-gl/gl/v4.1-core/gl"
 	"gonum.org/v1/gonum/mat"
 )
 
@@ -133,6 +133,17 @@ func (u *Uniform) Vecf(vector ...float32) {
 		gl.Uniform3f(u.Location, vector[0], vector[1], vector[2])
 	case 4:
 		gl.Uniform4f(u.Location, vector[0], vector[1], vector[2], vector[3])
+	}
+}
+
+func (u *Uniform) Vecd(vector ...float64) {
+	switch len(vector) {
+	case 2:
+		gl.Uniform2d(u.Location, vector[0], vector[1])
+	case 3:
+		gl.Uniform3d(u.Location, vector[0], vector[1], vector[2])
+	case 4:
+		gl.Uniform4d(u.Location, vector[0], vector[1], vector[2], vector[3])
 	}
 }
 

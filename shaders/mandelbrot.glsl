@@ -1,5 +1,5 @@
 
-#version 150 core
+#version 410 core
 
 #include <uniforms.glsl>
 
@@ -8,7 +8,7 @@
 
 out vec4 color;
 
-const float fractalMaxX = 1.;
+const float fractalMaxX = 1.5;
 
 const float fractalMinX = -1.;
 const float fractalMaxY = 1.0;
@@ -27,7 +27,7 @@ void main() {
       z = 1;
    }
 
-   vec2 uv = vec2((scaledX / z) , (scaledY/ z) );
+   vec2 uv = vec2((scaledX / z) , -(scaledY/ z) );
 
    uv.x += Pan.x;
    uv.y += Pan.y;

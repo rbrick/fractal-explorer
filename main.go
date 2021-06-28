@@ -6,10 +6,10 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/go-gl/glfw/v3.2/glfw"
+	"github.com/go-gl/glfw/v3.3/glfw"
 	"github.com/rbrick/fractal-explorer/engine"
 
-	"github.com/go-gl/gl/v3.2-core/gl"
+	"github.com/go-gl/gl/v4.1-core/gl"
 )
 
 var (
@@ -29,8 +29,8 @@ func main() {
 		log.Fatalln("failed to initialize:", err) // failed to initialize GLFW
 	}
 
-	w, err := engine.NewWindow("Fractal Explorer", 1200, 900, nil,
-		engine.ContextVersion(3, 2),
+	w, err := engine.NewWindow("Fractal Explorer", 1600, 900, nil,
+		engine.ContextVersion(4, 1),
 		engine.ContextProfile(glfw.OpenGLCoreProfile),
 		engine.ContextForwardCompatible(true),
 		engine.WindowResizable(false),
@@ -44,33 +44,42 @@ func main() {
 	panX, panY := 0., 0.
 	zoom := 1.
 	iterations := 200
+	mode := 0
 
 	w.WindowHandle.SetKeyCallback(func(win *glfw.Window, key glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
-		switch key {
-		case glfw.KeyEscape:
-			win.SetShouldClose(true)
-		case glfw.KeyP:
-			// increment the zoom
-			zoom *= 1.25
-		case glfw.KeyO:
-			zoom /= 1.25
-		case glfw.KeyUp:
-			// Pan up
-			panY += 0.01 / zoom
-		case glfw.KeyDown:
-			// Pan down
-			panY -= 0.01 / zoom
-		case glfw.KeyRight:
-			// pan right
-			panX += 0.01 / zoom
-		case glfw.KeyLeft:
-			// pan left
-			panX -= 0.01 / zoom
-		case glfw.KeyI:
-			if glfw.ModShift == mods {
-				iterations -= 50
-			} else {
-				iterations += 50
+		if action == glfw.Press || action == glfw.Repeat {
+			switch key {
+			case glfw.KeyEscape:
+				win.SetShouldClose(true)
+			case glfw.KeyP:
+				// increment the zoom
+				zoom *= 1.05
+			case glfw.KeyO:
+				zoom /= 1.05
+			case glfw.KeyUp:
+				// Pan up
+				panY -= 0.01 / zoom
+			case glfw.KeyDown:
+				// Pan down
+				panY += 0.01 / zoom
+			case glfw.KeyRight:
+				// pan right
+				panX += 0.01 / zoom
+			case glfw.KeyLeft:
+				// pan left
+				panX -= 0.01 / zoom
+			case glfw.KeyI:
+				if glfw.ModShift == mods {
+					iterations -= 50
+				} else {
+					iterations += 50
+				}
+			case glfw.KeyM:
+				mode += 1
+
+				if mode > 1 {
+					mode = 0
+				}
 			}
 		}
 	})
@@ -117,6 +126,7 @@ func main() {
 		program.GetUniform("Time").Float(float32(glfw.GetTime()))
 		program.GetUniform("Zoom").Float(float32(zoom))
 		program.GetUniform("MaxIterations").Int(int32(iterations))
+		program.GetUniform("Mode").Int(int32(mode))
 
 		vao.Bind(gl.ARRAY_BUFFER)
 		gl.DrawArrays(gl.TRIANGLES, 0, 6)
