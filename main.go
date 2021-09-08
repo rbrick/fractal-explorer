@@ -29,12 +29,12 @@ func main() {
 		log.Fatalln("failed to initialize:", err) // failed to initialize GLFW
 	}
 
-	w, err := engine.NewWindow("Fractal Explorer", 1600, 900, nil,
+	w, err := engine.NewWindow("Fractal Explorer", 1200, 900, nil,
 		engine.ContextVersion(4, 1),
 		engine.ContextProfile(glfw.OpenGLCoreProfile),
 		engine.ContextForwardCompatible(true),
-		engine.WindowResizable(false),
-		engine.Decorated(false),
+		engine.WindowResizable(true),
+		engine.Decorated(true),
 	)
 
 	if err != nil {
@@ -81,6 +81,8 @@ func main() {
 					mode = 0
 				}
 			}
+
+			fmt.Println("panX", panX, "panY", panY, "zoom", zoom)
 		}
 	})
 

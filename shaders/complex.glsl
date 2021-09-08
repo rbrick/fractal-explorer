@@ -17,3 +17,16 @@ vec2 cmplx_add(vec2 a, vec2 b) {
     float imag = a.y + b.y;
     return vec2(real, imag);
 }
+
+// performs a complex subtraction operation
+vec2 cmplx_sub(vec2 a, vec2 b) {
+    float real = a.x - b.x;
+    float imag = a.y - b.y;
+    return vec2(real, imag);
+}
+
+
+vec2 cmplx_div(vec2 a, vec2 b) {
+    float d = a.x*a.x + a.y * a.y;
+    return cmplx_multiply(b, vec2(a.x/d, -(a.y/d)));
+}
