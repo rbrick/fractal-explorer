@@ -7,6 +7,7 @@ import (
 	"runtime"
 
 	"github.com/go-gl/glfw/v3.3/glfw"
+	"github.com/mazznoer/colorgrad"
 	"github.com/rbrick/fractal-explorer/engine"
 
 	"github.com/go-gl/gl/v4.1-core/gl"
@@ -58,16 +59,16 @@ func main() {
 				zoom /= 1.05
 			case glfw.KeyUp:
 				// Pan up
-				panY -= 0.01 / zoom
+				panY -= 0.02 / zoom
 			case glfw.KeyDown:
 				// Pan down
-				panY += 0.01 / zoom
+				panY += 0.02 / zoom
 			case glfw.KeyRight:
 				// pan right
-				panX += 0.01 / zoom
+				panX += 0.02 / zoom
 			case glfw.KeyLeft:
 				// pan left
-				panX -= 0.01 / zoom
+				panX -= 0.02 / zoom
 			case glfw.KeyI:
 				if glfw.ModShift == mods {
 					iterations -= 50
@@ -112,6 +113,7 @@ func main() {
 	program.Attach(vert)
 	program.Attach(frag)
 	program.Link()
+
 	program.Unbind()
 
 	// setup our VAO
@@ -129,6 +131,17 @@ func main() {
 		program.GetUniform("Zoom").Float(float32(zoom))
 		program.GetUniform("MaxIterations").Int(int32(iterations))
 		program.GetUniform("Mode").Int(int32(mode))
+
+		var colors []int32
+
+		for _, c := range colorgrad.Blues().ColorfulColors(256) {
+
+			r, g, b := c.RGB255()
+
+			colors = append(colors, ((int32(r)&0x0ff)<<16)|((int32(g)&0x0ff)<<8)|(int32(b)&0x0ff))
+		}
+
+		program.GetUniform("palette").IntArray(colors)
 
 		vao.Bind(gl.ARRAY_BUFFER)
 		gl.DrawArrays(gl.TRIANGLES, 0, 6)

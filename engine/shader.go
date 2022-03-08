@@ -147,6 +147,12 @@ func (u *Uniform) Vecd(vector ...float64) {
 	}
 }
 
+func (u *Uniform) IntArray(i []int32) {
+
+	gl.Uniform1iv(u.Location, int32(len(i)), &i[0])
+
+}
+
 //Matrix puts a matrix as an uniform for a given shader
 func (u *Uniform) Matrix(m mat.Matrix, transpose bool) {
 	x, y := m.Dims()
